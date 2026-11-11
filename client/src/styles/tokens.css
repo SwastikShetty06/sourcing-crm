@@ -1,0 +1,30 @@
+:root {
+  --paper: #F5F2EA;
+  --surface: #FBFAF6;
+  --ink: #1C1B18;
+  --muted: #6A665C;
+  --hairline: #D9D3C3;
+  --accent: #0E5A5A;
+  --progress-fg: #8A5A08;
+  --progress-bg: #F4E7C8;
+  --booked-fg: #2F6B3F;
+  --booked-bg: #DCEBDC;
+  --lost-fg: #9A3324;
+  --lost-bg: #F3DAD4;
+
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+
+  --radius-input: 4px;
+  --radius-chip: 2px;
+  --shadow-dropdown: 0 4px 12px rgba(28, 27, 24, 0.10);
+  --transition-interactive: background-color 120ms, border-color 120ms, opacity 120ms;
+}
