@@ -452,39 +452,246 @@
   background-color: rgba(28, 27, 24, 0.02);
 }
 
-/* Mobile stacked table */
+/* Mobile stacked table -> Native Card Layout */
 @media (max-width: 720px) {
+  .table-container {
+    border: none;
+    background: transparent;
+  }
+
+  .responsive-table,
+  .responsive-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    width: 100%;
+  }
+
   .responsive-table th {
     display: none;
   }
 
-  .responsive-table,
-  .responsive-table tbody,
-  .responsive-table tr,
-  .responsive-table td {
+  .responsive-table tr {
+    display: block;
+    position: relative;
+    width: 100%;
+    background-color: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-input);
+    padding: var(--space-14) var(--space-16);
+    box-shadow: 0 1px 2px rgba(28, 27, 24, 0.04);
+  }
+
+  .responsive-table tr.clickable:active {
+    background-color: var(--paper);
+  }
+
+  /* First cell is the primary card header (Client Name, Phone, Project) */
+  .responsive-table td:first-child {
     display: block;
     width: 100%;
+    padding: 0 0 var(--space-10) 0;
+    margin-bottom: var(--space-10);
+    border-bottom: 1px dashed var(--hairline);
+    padding-right: 90px;
+    text-align: left;
   }
 
-  .responsive-table tr {
-    padding: var(--space-12);
-    border-bottom: 1px solid var(--hairline);
+  .responsive-table td:first-child::before {
+    display: none !important;
   }
 
-  .responsive-table td {
-    border-bottom: none;
+  .responsive-table td:first-child > div > div:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  /* Badges pinned at top-right of the card */
+  .responsive-table td[data-label="Status"],
+  .responsive-table td[data-label="Days overdue"] {
+    position: absolute;
+    top: var(--space-14);
+    right: var(--space-16);
+    width: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .responsive-table td[data-label="Status"]::before,
+  .responsive-table td[data-label="Days overdue"]::before {
+    display: none !important;
+  }
+
+  /* Metadata rows (Source, Sales manager, etc.) */
+  .responsive-table td:not(:first-child):not([data-label="Status"]):not([data-label="Days overdue"]) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--space-8);
     padding: var(--space-4) 0;
+    border: none;
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .responsive-table td:not(:first-child):not([data-label="Status"]):not([data-label="Days overdue"])::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    min-width: 85px;
+    max-width: 95px;
+    flex-shrink: 0;
+    padding-top: 1px;
+    text-align: left;
+  }
+
+  .responsive-table td > * {
+    text-align: left;
+  }
+}
+
+/* Client Source Card in Client Detail */
+.client-source-card {
+  padding: var(--space-12) var(--space-16);
+  background-color: var(--paper);
+  border-radius: var(--radius-input);
+  border: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  margin-top: var(--space-16);
+}
+
+.source-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.source-partner-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-10);
+  flex: 1 1 200px;
+}
+
+.source-card-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.source-names {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.source-sublabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.source-title {
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.source-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.source-card-footer {
+  border-top: 1px dashed var(--hairline);
+  padding-top: var(--space-8);
+  font-size: 13px;
+}
+
+/* Detail header actions */
+.detail-actions-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+@media (max-width: 600px) {
+  .detail-actions-group {
+    width: 100%;
+    margin-top: var(--space-8);
+  }
+
+  .detail-actions-group .btn {
+    flex: 1;
+    justify-content: center;
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
+/* Feedback Form Grid */
+.feedback-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-12);
+}
+
+@media (max-width: 680px) {
+  .feedback-fields-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+}
+
+/* Clients Mobile Filter Panel */
+.mobile-filter-drawer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-12);
+  padding-top: var(--space-12);
+  margin-top: var(--space-12);
+  border-top: 1px dashed var(--hairline);
+}
+
+.mobile-filter-toggle {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobile-filter-toggle {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
+    width: 100%;
+    margin-top: var(--space-8);
   }
 
-  .responsive-table td::before {
-    content: attr(data-label);
-    font-weight: 500;
-    font-size: 13px;
-    color: var(--muted);
+  .mobile-filter-drawer.collapsed {
+    display: none;
   }
 }
 

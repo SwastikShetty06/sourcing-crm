@@ -128,8 +128,8 @@ export function Dashboard() {
 
           {/* Section: Needs a follow-up */}
           <div style={{ marginBottom: 'var(--space-32)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'var(--space-12)' }}>
-              <h2 style={{ fontSize: '18px' }}>Needs a follow-up</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: 'var(--space-12)' }}>
+              <h2 style={{ fontSize: '18px', margin: 0 }}>Needs a follow-up</h2>
               <span className="text-meta tabular-nums">
                 {overdueClients.length} clients with no interaction for 7+ days
               </span>
@@ -145,8 +145,8 @@ export function Dashboard() {
 
           {/* Section: Recent entries */}
           <div style={{ marginBottom: 'var(--space-32)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'var(--space-12)' }}>
-              <h2 style={{ fontSize: '18px' }}>Recent entries</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: 'var(--space-12)' }}>
+              <h2 style={{ fontSize: '18px', margin: 0 }}>Recent entries</h2>
               <span className="text-meta">Last 10 recorded interactions</span>
             </div>
 

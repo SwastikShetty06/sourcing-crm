@@ -9,7 +9,7 @@ import { Table } from '../components/Table';
 import { StatusChip } from '../components/StatusChip';
 import { formatDate } from '../lib/format';
 import { exportClientsToExcel } from '../lib/exportExcel';
-import { Download, PlusCircle, Search, RotateCcw } from 'lucide-react';
+import { Download, PlusCircle, Search, RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 
 export function Clients() {
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ export function Clients() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [page, setPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const limit = 25;
 
   // Fetch lookups for filters
@@ -172,7 +173,7 @@ export function Clients() {
       )
     },
     {
-      header: 'Channel Partner & Source',
+      header: 'CP & Source',
       key: 'leadSource',
       render: renderSource
     },
@@ -209,6 +210,8 @@ export function Clients() {
   const hasActiveFilters = Boolean(
     q || status || leadSource || cpFirm || cp || caller || salesManager || from || to || createdBy || sortBy !== 'lastInteractionAt' || sortOrder !== 'desc'
   );
+
+  const secondaryFilterCount = [cpFirm, cp, caller, salesManager, createdBy, from, to].filter(Boolean).length;
 
   return (
     <div>
@@ -327,8 +330,39 @@ export function Clients() {
           </div>
         </div>
 
+        {/* Mobile filter toggle bar */}
+        <div className="mobile-filter-toggle">
+          <button
+            type="button"
+            className="btn btn-secondary btn-small"
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+          >
+            <SlidersHorizontal size={13} strokeWidth={1.5} />
+            <span>{showMobileFilters ? 'Hide filters' : 'More filters'}</span>
+            {secondaryFilterCount > 0 && (
+              <span style={{ background: 'var(--accent)', color: '#fff', fontSize: '11px', padding: '1px 6px', borderRadius: '10px' }}>
+                {secondaryFilterCount}
+              </span>
+            )}
+            {showMobileFilters ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+          </button>
+
+          {hasActiveFilters && (
+            <button
+              type="button"
+              className="text-meta"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}
+              onClick={resetFilters}
+            >
+              <RotateCcw size={12} />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
+
         {/* Row 2: Secondary dropdowns in an aligned grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)' }}>
+        <div className={`mobile-filter-drawer ${showMobileFilters ? '' : 'collapsed'}`}>
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" htmlFor="filter-firm">CP firm</label>
             <select

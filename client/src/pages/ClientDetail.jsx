@@ -496,7 +496,7 @@ export function ClientDetail() {
               </div>
 
               {/* Uniform Action Buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+              <div className="detail-actions-group">
                 {canEdit && (
                   <>
                     <button
@@ -536,19 +536,26 @@ export function ClientDetail() {
             </div>
 
             {/* Source Information Box */}
-            <div style={{ padding: 'var(--space-12) var(--space-16)', backgroundColor: 'var(--paper)', borderRadius: 'var(--radius-input)', border: '1px solid var(--hairline)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-8)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
-                <Building2 size={16} strokeWidth={1.5} style={{ color: 'var(--accent)' }} />
-                <span style={{ fontSize: '14px' }}>
-                  Channel Partner: <strong>{firmName}</strong>, <strong>{cpName}</strong>
-                </span>
-                <span className="text-meta" style={{ marginLeft: 'var(--space-4)', fontSize: '13px' }}>
-                  ({isCalling ? (callerName ? `via Calling by ${callerName}` : 'via Calling') : 'via Reference'})
+            <div className="client-source-card">
+              <div className="source-card-header">
+                <div className="source-partner-row">
+                  <Building2 size={16} strokeWidth={1.5} className="source-card-icon" />
+                  <div className="source-names">
+                    <span className="source-sublabel">Channel Partner</span>
+                    <div className="source-title">
+                      {firmName}, <strong>{cpName}</strong>
+                    </div>
+                  </div>
+                </div>
+                <span className="source-pill">
+                  {isCalling ? (callerName ? `Calling · ${callerName}` : 'Calling') : 'Reference'}
                 </span>
               </div>
 
-              <div className="text-meta">
-                Attended by: <strong>{client.lastSalesManager?.name || 'Unassigned'}</strong>
+              <div className="source-card-footer">
+                <span className="text-meta">
+                  Attended by: <strong>{client.lastSalesManager?.name || 'Unassigned'}</strong>
+                </span>
               </div>
             </div>
 

@@ -48,7 +48,7 @@ export function AddFeedbackForm({ onAddFeedback, defaultSalesManager = null }) {
       {error && <div className="state-error">{error}</div>}
 
       <form onSubmit={handleSubmit} noValidate>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)' }}>
+        <div className="feedback-fields-grid">
           <div className="form-group">
             <label className="form-label" htmlFor="feedback-kind">
               Interaction type
