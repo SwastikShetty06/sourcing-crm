@@ -4,9 +4,12 @@ const { connectDb } = require('./config/db');
 
 async function start() {
   await connectDb();
-  app.listen(env.PORT, () => {
-    process.stdout.write(`Server listening on port ${env.PORT}\n`);
+  const port = process.env.PORT || env.PORT;
+  app.listen(port, () => {
+    process.stdout.write(`Server listening on port ${port}\n`);
   });
 }
 
 start();
+
+module.exports = app;
