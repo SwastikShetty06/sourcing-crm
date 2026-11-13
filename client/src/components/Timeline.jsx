@@ -182,7 +182,7 @@ export function Timeline({
             ) : (
               <>
                 <div className="timeline-header">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
+                  <div className="timeline-header-info">
                     <span className="timeline-title">Feedback {index + 1}</span>
                     <span className="text-meta" style={{ fontWeight: 500 }}>
                       ({KIND_LABELS[item.kind] || item.kind})
@@ -191,7 +191,7 @@ export function Timeline({
                   </div>
 
                   {canManage && (
-                    <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
+                    <div className="timeline-header-actions">
                       <button
                         type="button"
                         className="btn btn-secondary btn-icon"

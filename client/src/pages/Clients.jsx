@@ -216,7 +216,7 @@ export function Clients() {
   return (
     <div>
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-20)', flexWrap: 'wrap', gap: 'var(--space-12)' }}>
+      <div className="page-header-row clients-header-row">
         <div>
           <h1 className="page-title" style={{ marginBottom: 0 }}>Client register</h1>
           <div className="text-meta" style={{ marginTop: 'var(--space-4)' }}>
@@ -224,7 +224,7 @@ export function Clients() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
+        <div className="clients-header-actions">
           <button
             type="button"
             className="btn btn-secondary btn-small"
@@ -244,10 +244,10 @@ export function Clients() {
       </div>
 
       {/* Structured Filter Card */}
-      <div style={{ marginBottom: 'var(--space-20)', padding: 'var(--space-16)', border: '1px solid var(--hairline)', borderRadius: 'var(--radius-input)', backgroundColor: 'var(--surface)' }}>
+      <div className="clients-filter-card">
         {/* Row 1: Fast Search & Status / Source Segmentation */}
-        <div style={{ display: 'flex', gap: 'var(--space-12)', alignItems: 'center', flexWrap: 'wrap', marginBottom: 'var(--space-16)' }}>
-          <div style={{ flex: '1 1 240px', position: 'relative' }}>
+        <div className="clients-filter-search-row">
+          <div className="clients-search-input-wrap">
             <input
               type="text"
               className="form-input"
@@ -262,12 +262,12 @@ export function Clients() {
             <Search
               size={15}
               strokeWidth={1.5}
-              style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--muted)' }}
+              style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--muted)' }}
             />
           </div>
 
           {/* Quick status tabs */}
-          <div style={{ display: 'inline-flex', background: 'var(--paper)', padding: '3px', borderRadius: '4px', border: '1px solid var(--hairline)' }}>
+          <div className="clients-segmented-filter" role="radiogroup" aria-label="Status filter">
             {[
               { val: '', label: 'All status' },
               { val: 'in_progress', label: 'In progress' },
@@ -277,17 +277,7 @@ export function Clients() {
               <button
                 key={tab.val}
                 type="button"
-                className="btn-small"
-                style={{
-                  border: 'none',
-                  background: status === tab.val ? 'var(--surface)' : 'transparent',
-                  color: status === tab.val ? 'var(--ink)' : 'var(--muted)',
-                  fontWeight: status === tab.val ? 600 : 500,
-                  borderRadius: '3px',
-                  cursor: 'pointer',
-                  padding: '4px 10px',
-                  fontSize: '12px'
-                }}
+                className={`clients-segmented-btn ${status === tab.val ? 'active' : ''}`}
                 onClick={() => {
                   setStatus(tab.val);
                   setPage(1);
@@ -299,7 +289,7 @@ export function Clients() {
           </div>
 
           {/* Quick source tabs */}
-          <div style={{ display: 'inline-flex', background: 'var(--paper)', padding: '3px', borderRadius: '4px', border: '1px solid var(--hairline)' }}>
+          <div className="clients-segmented-filter" role="radiogroup" aria-label="Source filter">
             {[
               { val: '', label: 'All sources' },
               { val: 'calling', label: 'Calling' },
@@ -308,17 +298,7 @@ export function Clients() {
               <button
                 key={tab.val}
                 type="button"
-                className="btn-small"
-                style={{
-                  border: 'none',
-                  background: leadSource === tab.val ? 'var(--surface)' : 'transparent',
-                  color: leadSource === tab.val ? 'var(--ink)' : 'var(--muted)',
-                  fontWeight: leadSource === tab.val ? 600 : 500,
-                  borderRadius: '3px',
-                  cursor: 'pointer',
-                  padding: '4px 10px',
-                  fontSize: '12px'
-                }}
+                className={`clients-segmented-btn ${leadSource === tab.val ? 'active' : ''}`}
                 onClick={() => {
                   setLeadSource(tab.val);
                   setPage(1);
@@ -334,14 +314,13 @@ export function Clients() {
         <div className="mobile-filter-toggle">
           <button
             type="button"
-            className="btn btn-secondary btn-small"
+            className="btn btn-secondary btn-small mobile-filter-btn"
             onClick={() => setShowMobileFilters(!showMobileFilters)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
             <SlidersHorizontal size={13} strokeWidth={1.5} />
             <span>{showMobileFilters ? 'Hide filters' : 'More filters'}</span>
             {secondaryFilterCount > 0 && (
-              <span style={{ background: 'var(--accent)', color: '#fff', fontSize: '11px', padding: '1px 6px', borderRadius: '10px' }}>
+              <span className="filter-count-badge">
                 {secondaryFilterCount}
               </span>
             )}
@@ -351,8 +330,7 @@ export function Clients() {
           {hasActiveFilters && (
             <button
               type="button"
-              className="text-meta"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}
+              className="text-meta reset-filters-btn"
               onClick={resetFilters}
             >
               <RotateCcw size={12} />

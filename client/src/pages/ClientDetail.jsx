@@ -466,31 +466,31 @@ export function ClientDetail() {
         ) : (
           <div>
             {/* Header: Title, Status, and Actions Group */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--space-12)', marginBottom: 'var(--space-16)' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-12)', flexWrap: 'wrap' }}>
+            <div className="client-header-top-row">
+              <div className="client-header-info">
+                <div className="client-title-badge-row">
                   <h1 className="page-title" style={{ marginBottom: 0 }}>
                     {client.clientName}
                   </h1>
                   <StatusChip status={client.status} />
                 </div>
 
-                <div style={{ display: 'flex', gap: 'var(--space-16)', alignItems: 'center', flexWrap: 'wrap', marginTop: 'var(--space-6)' }}>
+                <div className="client-meta-grid">
                   {client.clientPhone && (
-                    <span className="text-meta tabular-nums" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span className="text-meta tabular-nums client-meta-item">
                       <Phone size={13} strokeWidth={1.5} />
-                      {client.clientPhone}
+                      <span>{client.clientPhone}</span>
                     </span>
                   )}
                   {client.projectName && (
-                    <span className="text-meta" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span className="text-meta client-meta-item">
                       <MapPin size={13} strokeWidth={1.5} />
-                      {client.projectName}
+                      <span>{client.projectName}</span>
                     </span>
                   )}
-                  <span className="text-meta tabular-nums" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span className="text-meta tabular-nums client-meta-item">
                     <Calendar size={13} strokeWidth={1.5} />
-                    Visited {formatDate(client.firstVisitDate)}
+                    <span>Visited {formatDate(client.firstVisitDate)}</span>
                   </span>
                 </div>
               </div>
@@ -656,29 +656,19 @@ export function ClientDetail() {
           <h3 style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: 'var(--space-12)' }}>
             Status history
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
             {client.statusHistory.map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  fontSize: '13px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: 'var(--space-6) 0',
-                  borderBottom: '1px dashed var(--hairline)'
-                }}
-              >
-                <div>
+              <div key={idx} className="status-history-card">
+                <div className="status-history-left">
                   <StatusChip status={item.status} />
-                  {item.note && <span style={{ marginLeft: 'var(--space-8)', color: 'var(--ink)' }}>{item.note}</span>}
+                  {item.note && <span className="status-history-note">{item.note}</span>}
                   {item.changedBy?.displayName && (
-                    <span className="text-meta" style={{ marginLeft: 'var(--space-8)' }}>
+                    <span className="text-meta status-history-author">
                       by {item.changedBy.displayName}
                     </span>
                   )}
                 </div>
-                <div className="text-meta tabular-nums">
+                <div className="text-meta tabular-nums status-history-date">
                   {formatDate(item.changedAt)}
                 </div>
               </div>

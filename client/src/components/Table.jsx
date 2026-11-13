@@ -39,8 +39,17 @@ export function Table({
               >
                 {columns.map(col => {
                   const content = col.render ? col.render(row) : row[col.key];
+                  const isBadge =
+                    col.key === 'status' ||
+                    col.key === 'daysSinceLastInteraction' ||
+                    col.header === 'Status' ||
+                    col.header === 'Days overdue';
                   return (
-                    <td key={col.key || col.header} data-label={col.header}>
+                    <td
+                      key={col.key || col.header}
+                      data-label={col.header}
+                      className={isBadge ? 'td-badge' : ''}
+                    >
                       {content}
                     </td>
                   );

@@ -49,46 +49,50 @@ export function AddFeedbackForm({ onAddFeedback, defaultSalesManager = null }) {
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="feedback-fields-grid">
-          <div className="form-group">
-            <label className="form-label" htmlFor="feedback-kind">
-              Interaction type
-            </label>
-            <select
-              id="feedback-kind"
-              className="form-select"
-              value={kind}
-              onChange={e => setKind(e.target.value)}
-            >
-              <option value="site_visit">Site visit</option>
-              <option value="revisit">Revisit</option>
-              <option value="call">Call</option>
-              <option value="vc">VC</option>
-              <option value="obm">OBM</option>
-              <option value="other">Other</option>
-            </select>
+          <div className="feedback-type-date-row">
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" htmlFor="feedback-kind">
+                Interaction type
+              </label>
+              <select
+                id="feedback-kind"
+                className="form-select"
+                value={kind}
+                onChange={e => setKind(e.target.value)}
+              >
+                <option value="site_visit">Site visit</option>
+                <option value="revisit">Revisit</option>
+                <option value="call">Call</option>
+                <option value="vc">VC</option>
+                <option value="obm">OBM</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" htmlFor="feedback-date">
+                Date
+              </label>
+              <input
+                id="feedback-date"
+                type="date"
+                className="form-input"
+                value={occurredAt}
+                onChange={e => setOccurredAt(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="feedback-date">
-              Date
-            </label>
-            <input
-              id="feedback-date"
-              type="date"
-              className="form-input"
-              value={occurredAt}
-              onChange={e => setOccurredAt(e.target.value)}
+          <div className="feedback-manager-group">
+            <CreatableSelect
+              label="Sales manager"
+              type="sales_manager"
+              value={salesManager}
+              onChange={setSalesManager}
+              required
+              placeholder="Type or select manager"
             />
           </div>
-
-          <CreatableSelect
-            label="Sales manager"
-            type="sales_manager"
-            value={salesManager}
-            onChange={setSalesManager}
-            required
-            placeholder="Type or select manager"
-          />
         </div>
 
         <div className="form-group">
@@ -111,7 +115,7 @@ export function AddFeedbackForm({ onAddFeedback, defaultSalesManager = null }) {
 
         <button
           type="submit"
-          className="btn btn-primary"
+          className="btn btn-primary feedback-submit-btn"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Adding...' : 'Add feedback'}

@@ -45,14 +45,14 @@ export function Dashboard() {
 
   const recentColumns = [
     {
-      header: 'Date',
-      key: 'occurredAt',
-      render: r => <span className="tabular-nums">{formatDate(r.occurredAt)}</span>
-    },
-    {
       header: 'Client',
       key: 'clientName',
       render: r => <span style={{ fontWeight: 600 }}>{r.clientName}</span>
+    },
+    {
+      header: 'Date',
+      key: 'occurredAt',
+      render: r => <span className="tabular-nums">{formatDate(r.occurredAt)}</span>
     },
     {
       header: 'Interaction',
@@ -72,7 +72,7 @@ export function Dashboard() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-24)', flexWrap: 'wrap', gap: 'var(--space-12)' }}>
+      <div className="page-header-row">
         <div>
           <h1 className="page-title" style={{ marginBottom: 0 }}>Register dashboard</h1>
           <div className="text-meta" style={{ marginTop: 'var(--space-4)' }}>
@@ -80,7 +80,7 @@ export function Dashboard() {
           </div>
         </div>
 
-        <Link to="/clients/new" className="btn btn-primary btn-small">
+        <Link to="/clients/new" className="btn btn-primary btn-small dashboard-cta-btn">
           + New visit
         </Link>
       </div>
