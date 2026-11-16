@@ -19,8 +19,29 @@ export function StatusDialog({
   const [lostNote, setLostNote] = useState('');
   const [unitDetails, setUnitDetails] = useState('');
   const [bookingDate, setBookingDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [sqft, setSqft] = useState('');
+  const [ratePerSqft, setRatePerSqft] = useState('');
+  const [agreementValue, setAgreementValue] = useState('');
   const [note, setNote] = useState('');
   const [error, setError] = useState(null);
+
+  function handleSqftChange(val) {
+    setSqft(val);
+    const numSqft = parseFloat(val);
+    const numRate = parseFloat(ratePerSqft);
+    if (!isNaN(numSqft) && numSqft > 0 && !isNaN(numRate) && numRate > 0) {
+      setAgreementValue(String(Math.round(numSqft * numRate)));
+    }
+  }
+
+  function handleRateChange(val) {
+    setRatePerSqft(val);
+    const numSqft = parseFloat(sqft);
+    const numRate = parseFloat(val);
+    if (!isNaN(numSqft) && numSqft > 0 && !isNaN(numRate) && numRate > 0) {
+      setAgreementValue(String(Math.round(numSqft * numRate)));
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -37,7 +58,10 @@ export function StatusDialog({
       lostReason: targetStatus === 'lost' ? lostReason : undefined,
       lostNote: targetStatus === 'lost' ? lostNote.trim() : undefined,
       unitDetails: targetStatus === 'booked' ? unitDetails.trim() : undefined,
-      bookingDate: targetStatus === 'booked' && bookingDate ? new Date(bookingDate).toISOString() : undefined
+      bookingDate: targetStatus === 'booked' && bookingDate ? new Date(bookingDate).toISOString() : undefined,
+      sqft: targetStatus === 'booked' && sqft ? Number(sqft) : undefined,
+      ratePerSqft: targetStatus === 'booked' && ratePerSqft ? Number(ratePerSqft) : undefined,
+      agreementValue: targetStatus === 'booked' && agreementValue ? Number(agreementValue) : undefined
     });
   }
 
@@ -51,35 +75,90 @@ export function StatusDialog({
 
       <form onSubmit={handleSubmit} noValidate>
         {targetStatus === 'booked' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-12)' }}>
-            <div className="form-group">
-              <label className="form-label" htmlFor="unitDetails">
-                Unit / flat details
-              </label>
-              <input
-                id="unitDetails"
-                type="text"
-                className="form-input"
-                placeholder="e.g. Tower B 1402, 3 BHK"
-                maxLength={80}
-                value={unitDetails}
-                onChange={e => setUnitDetails(e.target.value)}
-              />
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-12)' }}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="unitDetails">
+                  Unit / flat details
+                </label>
+                <input
+                  id="unitDetails"
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. Tower B 1402, 3 BHK"
+                  maxLength={80}
+                  value={unitDetails}
+                  onChange={e => setUnitDetails(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="bookingDate">
+                  Booking date
+                </label>
+                <input
+                  id="bookingDate"
+                  type="date"
+                  className="form-input"
+                  value={bookingDate}
+                  onChange={e => setBookingDate(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="bookingDate">
-                Booking date
-              </label>
-              <input
-                id="bookingDate"
-                type="date"
-                className="form-input"
-                value={bookingDate}
-                onChange={e => setBookingDate(e.target.value)}
-              />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)' }}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="sqft">
+                  Area (sq.ft)
+                </label>
+                <input
+                  id="sqft"
+                  type="number"
+                  min="0"
+                  step="any"
+                  className="form-input tabular-nums"
+                  placeholder="e.g. 1250"
+                  value={sqft}
+                  onChange={e => handleSqftChange(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="ratePerSqft">
+                  Price per sq.ft (₹)
+                </label>
+                <input
+                  id="ratePerSqft"
+                  type="number"
+                  min="0"
+                  step="any"
+                  className="form-input tabular-nums"
+                  placeholder="e.g. 6500"
+                  value={ratePerSqft}
+                  onChange={e => handleRateChange(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="agreementValue">
+                  Agreement value (₹)
+                </label>
+                <input
+                  id="agreementValue"
+                  type="number"
+                  min="0"
+                  step="any"
+                  className="form-input tabular-nums"
+                  placeholder="Auto-calculated (editable)"
+                  value={agreementValue}
+                  onChange={e => setAgreementValue(e.target.value)}
+                />
+                <span className="form-hint">
+                  {agreementValue && !isNaN(Number(agreementValue)) ? `₹${Number(agreementValue).toLocaleString('en-IN')}` : 'Auto-calculated from sqft × rate'}
+                </span>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {targetStatus === 'lost' && (

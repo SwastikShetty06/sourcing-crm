@@ -136,6 +136,15 @@ const clientSchema = new mongoose.Schema(
     bookingDate: {
       type: Date
     },
+    sqft: {
+      type: Number
+    },
+    ratePerSqft: {
+      type: Number
+    },
+    agreementValue: {
+      type: Number
+    },
     isArchived: {
       type: Boolean,
       default: false

@@ -44,6 +44,18 @@ const updateClientSchema = z.object({
   caller: lookupRefSchema.optional().nullable(),
   unitDetails: z.string().trim().max(80).optional().or(z.literal('')).nullable(),
   bookingDate: z.string().or(z.date()).optional().nullable(),
+  sqft: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? null : Number(val)),
+    z.number().min(0).nullable().optional()
+  ),
+  ratePerSqft: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? null : Number(val)),
+    z.number().min(0).nullable().optional()
+  ),
+  agreementValue: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? null : Number(val)),
+    z.number().min(0).nullable().optional()
+  ),
   lostReason: z.enum(['budget', 'location', 'chose_competitor', 'not_interested', 'unreachable', 'other']).optional().nullable(),
   lostNote: z.string().trim().max(300).optional().or(z.literal('')).nullable()
 }).strict();
@@ -68,7 +80,19 @@ const updateStatusSchema = z.object({
   lostReason: z.enum(['budget', 'location', 'chose_competitor', 'not_interested', 'unreachable', 'other']).optional(),
   lostNote: z.string().trim().max(300).optional().or(z.literal('')),
   unitDetails: z.string().trim().max(80).optional().or(z.literal('')),
-  bookingDate: z.string().or(z.date()).optional()
+  bookingDate: z.string().or(z.date()).optional(),
+  sqft: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+    z.number().min(0).optional()
+  ),
+  ratePerSqft: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+    z.number().min(0).optional()
+  ),
+  agreementValue: z.preprocess(
+    val => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+    z.number().min(0).optional()
+  )
 }).refine(data => {
   if (data.status === 'lost') {
     return Boolean(data.lostReason);
@@ -331,6 +355,9 @@ router.patch('/:id', validate(updateClientSchema), async (req, res, next) => {
       caller,
       unitDetails,
       bookingDate,
+      sqft,
+      ratePerSqft,
+      agreementValue,
       lostReason,
       lostNote
     } = req.body;
@@ -341,6 +368,13 @@ router.patch('/:id', validate(updateClientSchema), async (req, res, next) => {
     if (firstVisitDate !== undefined) client.firstVisitDate = new Date(firstVisitDate);
     if (unitDetails !== undefined) client.unitDetails = unitDetails || undefined;
     if (bookingDate !== undefined) client.bookingDate = bookingDate ? new Date(bookingDate) : undefined;
+    if (sqft !== undefined) client.sqft = (sqft !== null && !isNaN(sqft)) ? Number(sqft) : undefined;
+    if (ratePerSqft !== undefined) client.ratePerSqft = (ratePerSqft !== null && !isNaN(ratePerSqft)) ? Number(ratePerSqft) : undefined;
+    if (agreementValue !== undefined) {
+      client.agreementValue = (agreementValue !== null && !isNaN(agreementValue)) ? Number(agreementValue) : undefined;
+    } else if (client.sqft && client.ratePerSqft) {
+      client.agreementValue = Math.round(client.sqft * client.ratePerSqft);
+    }
     if (lostReason !== undefined) client.lostReason = lostReason || undefined;
     if (lostNote !== undefined) client.lostNote = lostNote || undefined;
 
@@ -577,7 +611,17 @@ router.post('/:id/status', validate(updateStatusSchema), async (req, res, next) 
       return res.status(403).json({ message: 'Access denied to update status for this client.' });
     }
 
-    const { status, note, lostReason, lostNote, unitDetails, bookingDate } = req.body;
+    const {
+      status,
+      note,
+      lostReason,
+      lostNote,
+      unitDetails,
+      bookingDate,
+      sqft,
+      ratePerSqft,
+      agreementValue
+    } = req.body;
 
     client.status = status;
 
@@ -586,9 +630,18 @@ router.post('/:id/status', validate(updateStatusSchema), async (req, res, next) 
       client.lostNote = lostNote || undefined;
       client.unitDetails = undefined;
       client.bookingDate = undefined;
+      client.sqft = undefined;
+      client.ratePerSqft = undefined;
+      client.agreementValue = undefined;
     } else if (status === 'booked') {
       client.unitDetails = unitDetails || undefined;
       client.bookingDate = bookingDate ? new Date(bookingDate) : new Date();
+      client.sqft = (sqft !== null && sqft !== undefined && !isNaN(sqft)) ? Number(sqft) : undefined;
+      client.ratePerSqft = (ratePerSqft !== null && ratePerSqft !== undefined && !isNaN(ratePerSqft)) ? Number(ratePerSqft) : undefined;
+      const computedAgreementValue = (agreementValue !== null && agreementValue !== undefined && !isNaN(agreementValue))
+        ? Number(agreementValue)
+        : (client.sqft && client.ratePerSqft ? Math.round(client.sqft * client.ratePerSqft) : undefined);
+      client.agreementValue = computedAgreementValue;
       client.lostReason = undefined;
       client.lostNote = undefined;
     } else if (status === 'in_progress') {
@@ -596,6 +649,9 @@ router.post('/:id/status', validate(updateStatusSchema), async (req, res, next) 
       client.lostNote = undefined;
       client.unitDetails = undefined;
       client.bookingDate = undefined;
+      client.sqft = undefined;
+      client.ratePerSqft = undefined;
+      client.agreementValue = undefined;
     }
 
     client.statusHistory.push({

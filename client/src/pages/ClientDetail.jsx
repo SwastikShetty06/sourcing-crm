@@ -48,9 +48,30 @@ export function ClientDetail() {
   const [editVisitDate, setEditVisitDate] = useState('');
   const [editUnitDetails, setEditUnitDetails] = useState('');
   const [editBookingDate, setEditBookingDate] = useState('');
+  const [editSqft, setEditSqft] = useState('');
+  const [editRatePerSqft, setEditRatePerSqft] = useState('');
+  const [editAgreementValue, setEditAgreementValue] = useState('');
   const [editLostReason, setEditLostReason] = useState('');
   const [editLostNote, setEditLostNote] = useState('');
   const [editError, setEditError] = useState(null);
+
+  function handleEditSqftChange(val) {
+    setEditSqft(val);
+    const numSqft = parseFloat(val);
+    const numRate = parseFloat(editRatePerSqft);
+    if (!isNaN(numSqft) && numSqft > 0 && !isNaN(numRate) && numRate > 0) {
+      setEditAgreementValue(String(Math.round(numSqft * numRate)));
+    }
+  }
+
+  function handleEditRateChange(val) {
+    setEditRatePerSqft(val);
+    const numSqft = parseFloat(editSqft);
+    const numRate = parseFloat(val);
+    if (!isNaN(numSqft) && numSqft > 0 && !isNaN(numRate) && numRate > 0) {
+      setEditAgreementValue(String(Math.round(numSqft * numRate)));
+    }
+  }
 
   // Status dialog state
   const [dialogStatus, setDialogStatus] = useState(null);
@@ -136,6 +157,9 @@ export function ClientDetail() {
     setEditBookingDate(
       client.bookingDate ? new Date(client.bookingDate).toISOString().split('T')[0] : ''
     );
+    setEditSqft(client.sqft !== undefined && client.sqft !== null ? String(client.sqft) : '');
+    setEditRatePerSqft(client.ratePerSqft !== undefined && client.ratePerSqft !== null ? String(client.ratePerSqft) : '');
+    setEditAgreementValue(client.agreementValue !== undefined && client.agreementValue !== null ? String(client.agreementValue) : '');
     setEditLostReason(client.lostReason || '');
     setEditLostNote(client.lostNote || '');
     setEditError(null);
@@ -190,6 +214,9 @@ export function ClientDetail() {
         firstVisitDate: editVisitDate ? new Date(editVisitDate).toISOString() : undefined,
         unitDetails: editUnitDetails.trim() || null,
         bookingDate: editBookingDate ? new Date(editBookingDate).toISOString() : null,
+        sqft: editSqft ? Number(editSqft) : null,
+        ratePerSqft: editRatePerSqft ? Number(editRatePerSqft) : null,
+        agreementValue: editAgreementValue ? Number(editAgreementValue) : null,
         lostReason: editLostReason || null,
         lostNote: editLostNote.trim() || null
       });
@@ -407,6 +434,53 @@ export function ClientDetail() {
                     />
                   </div>
                 </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 'var(--space-12)', marginTop: 'var(--space-12)' }}>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="edit-sqft">Area (sq.ft)</label>
+                    <input
+                      id="edit-sqft"
+                      type="number"
+                      min="0"
+                      step="any"
+                      className="form-input tabular-nums"
+                      placeholder="e.g. 1250"
+                      value={editSqft}
+                      onChange={e => handleEditSqftChange(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="edit-rate">Price per sq.ft (₹)</label>
+                    <input
+                      id="edit-rate"
+                      type="number"
+                      min="0"
+                      step="any"
+                      className="form-input tabular-nums"
+                      placeholder="e.g. 6500"
+                      value={editRatePerSqft}
+                      onChange={e => handleEditRateChange(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="edit-agreement-val">Agreement value (₹)</label>
+                    <input
+                      id="edit-agreement-val"
+                      type="number"
+                      min="0"
+                      step="any"
+                      className="form-input tabular-nums"
+                      placeholder="Auto-calculated (editable)"
+                      value={editAgreementValue}
+                      onChange={e => setEditAgreementValue(e.target.value)}
+                    />
+                    <span className="form-hint">
+                      {editAgreementValue && !isNaN(Number(editAgreementValue))
+                        ? `₹${Number(editAgreementValue).toLocaleString('en-IN')}`
+                        : 'Auto-calculated from sqft × rate'}
+                    </span>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -561,10 +635,23 @@ export function ClientDetail() {
 
             {/* Booked / Lost Details Banner */}
             {client.status === 'booked' && (
-              <div style={{ marginTop: 'var(--space-12)', padding: 'var(--space-10) var(--space-16)', backgroundColor: 'var(--booked-bg)', color: 'var(--booked-fg)', borderRadius: 'var(--radius-input)', fontSize: '13px' }}>
-                <strong>Booked</strong>
-                {client.unitDetails && ` - Unit: ${client.unitDetails}`}
-                {client.bookingDate && ` on ${formatDate(client.bookingDate)}`}
+              <div style={{ marginTop: 'var(--space-12)', padding: 'var(--space-10) var(--space-16)', backgroundColor: 'var(--booked-bg)', color: 'var(--booked-fg)', borderRadius: 'var(--radius-input)', fontSize: '13px', lineHeight: 1.5 }}>
+                <div style={{ fontWeight: 600 }}>
+                  Booked{client.unitDetails && ` - Unit: ${client.unitDetails}`}{client.bookingDate && ` on ${formatDate(client.bookingDate)}`}
+                </div>
+                {(client.sqft || client.ratePerSqft || client.agreementValue) && (
+                  <div style={{ marginTop: 'var(--space-4)', fontSize: '12.5px', display: 'flex', flexWrap: 'wrap', gap: 'var(--space-16)' }}>
+                    {client.sqft && (
+                      <span>Area: <strong>{Number(client.sqft).toLocaleString('en-IN')} sq.ft</strong></span>
+                    )}
+                    {client.ratePerSqft && (
+                      <span>Rate: <strong>₹{Number(client.ratePerSqft).toLocaleString('en-IN')}/sq.ft</strong></span>
+                    )}
+                    {client.agreementValue && (
+                      <span>Agreement value: <strong>₹{Number(client.agreementValue).toLocaleString('en-IN')}</strong></span>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
