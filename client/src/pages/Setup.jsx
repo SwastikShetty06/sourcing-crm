@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { setupAdmin } from '../api/auth';
 import { useAuth } from '../auth/AuthContext';
+import { LoadingState } from '../components/LoadingState';
 
 const setupSchema = z.object({
   userId: z
@@ -38,7 +39,7 @@ export function Setup() {
   });
 
   if (loading) {
-    return <div className="state-loading">Checking configuration...</div>;
+    return <LoadingState text="Checking configuration" fullScreen />;
   }
 
   if (needsSetup === false) {

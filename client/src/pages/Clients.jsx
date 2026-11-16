@@ -7,6 +7,7 @@ import { getUsers } from '../api/users';
 import { useAuth } from '../auth/AuthContext';
 import { Table } from '../components/Table';
 import { StatusChip } from '../components/StatusChip';
+import { LoadingState } from '../components/LoadingState';
 import { formatDate } from '../lib/format';
 import { exportClientsToExcel } from '../lib/exportExcel';
 import { Download, PlusCircle, Search, RotateCcw, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
@@ -478,7 +479,7 @@ export function Clients() {
         )}
       </div>
 
-      {isLoading && <div className="state-loading">Loading clients...</div>}
+      {isLoading && <LoadingState text="Loading client records" inline />}
       {isError && (
         <div className="state-error">
           {error?.message || 'Failed to load client records.'}

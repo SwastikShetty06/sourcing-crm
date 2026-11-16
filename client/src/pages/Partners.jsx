@@ -4,6 +4,7 @@ import { getPartnerStats } from '../api/stats';
 import { updateLookup, mergeLookup } from '../api/lookups';
 import { useAuth } from '../auth/AuthContext';
 import { Table } from '../components/Table';
+import { LoadingState } from '../components/LoadingState';
 import { Edit2, GitMerge, PowerOff, CheckCircle } from 'lucide-react';
 
 const TABS = [
@@ -348,7 +349,7 @@ export function Partners() {
         </div>
       )}
 
-      {isLoading && <div className="state-loading">Loading partner statistics...</div>}
+      {isLoading && <LoadingState text="Loading partner statistics" inline />}
       {isError && (
         <div className="state-error">
           {error?.message || 'Failed to load partners.'}

@@ -18,6 +18,7 @@ import { Timeline } from '../components/Timeline';
 import { AddFeedbackForm } from '../components/AddFeedbackForm';
 import { CreatableSelect } from '../components/CreatableSelect';
 import { SourceSegment } from '../components/SourceSegment';
+import { LoadingState } from '../components/LoadingState';
 import { formatDate } from '../lib/format';
 import { Edit2, Archive, ArrowLeft, Trash2, Building2, Phone, Calendar, MapPin, UserCheck } from 'lucide-react';
 
@@ -264,7 +265,7 @@ export function ClientDetail() {
   }
 
   if (isLoading) {
-    return <div className="state-loading">Loading client details...</div>;
+    return <LoadingState text="Loading client details" fullScreen />;
   }
 
   if (isError || !client) {

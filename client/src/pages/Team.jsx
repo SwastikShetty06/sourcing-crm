@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers, createUser, updateUser, resetUserPassword } from '../api/users';
 import { useAuth } from '../auth/AuthContext';
 import { Table } from '../components/Table';
+import { LoadingState } from '../components/LoadingState';
 import { formatDate } from '../lib/format';
 import { KeyRound, PowerOff, CheckCircle, Copy, Check, Filter } from 'lucide-react';
 
@@ -573,7 +574,7 @@ export function Team() {
         )}
       </div>
 
-      {isLoading && <div className="state-loading">Loading users...</div>}
+      {isLoading && <LoadingState text="Loading team users" inline />}
       {isError && (
         <div className="state-error">
           {error?.message || 'Failed to load team users.'}

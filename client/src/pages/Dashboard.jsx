@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getSummaryStats } from '../api/stats';
 import { formatDate } from '../lib/format';
 import { Table } from '../components/Table';
+import { LoadingState } from '../components/LoadingState';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ export function Dashboard() {
         </Link>
       </div>
 
-      {isLoading && <div className="state-loading">Loading summary metrics...</div>}
+      {isLoading && <LoadingState text="Loading summary metrics" inline />}
       {isError && (
         <div className="state-error">
           {error?.message || 'Failed to load dashboard metrics.'}

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../auth/AuthContext';
+import { LoadingState } from '../components/LoadingState';
 
 const loginSchema = z.object({
   userId: z.string().trim().min(1, 'User ID is required'),
@@ -45,7 +46,7 @@ export function Login() {
   });
 
   if (loading) {
-    return <div className="state-loading">Checking session...</div>;
+    return <LoadingState text="Checking session" fullScreen />;
   }
 
   if (needsSetup) {
